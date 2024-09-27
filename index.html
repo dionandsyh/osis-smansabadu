@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Penghitung Suara Ketos Modern</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 40px;
+            max-width: 800px;
+            width: 90%;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .logo {
+            width: 80px;
+            height: 80px;
+            transition: transform 0.3s ease;
+        }
+        .logo:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin: 0;
+            font-weight: 600;
+            flex-grow: 1;
+        }
+        #vote-form {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+        }
+        .candidate {
+            flex: 1;
+            margin: 0 15px;
+            text-align: center;
+        }
+        .candidate h3 {
+            color: #555;
+            margin-bottom: 10px;
+            font-weight: 400;
+        }
+        .vote-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .vote-btn {
+            font-size: 24px;
+            width: 40px;
+            height: 40px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .vote-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        .vote-btn:active {
+            transform: scale(0.95);
+        }
+        input[type="number"] {
+            width: 60px;
+            font-size: 18px;
+            text-align: center;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            margin: 0 10px;
+        }
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 10px rgba(76, 175, 80, 0.3);
+        }
+        #chart-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .pulse {
+            animation: pulse 0.5s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="/api/placeholder/80/80" alt="Logo" class="logo">
+            <h1>Penghitung Suara Ketos</h1>
+            <img src="/api/placeholder/80/80" alt="Logo" class="logo">
+        </div>
+        <div id="vote-form">
+            <div class="candidate">
+                <h3>Kandidat 1</h3>
+                <div class="vote-controls">
+                    <button class="vote-btn" onclick="updateVote('candidate1', -1)">-</button>
+                    <input type="number" id="candidate1" value="0" min="0" readonly>
+                    <button class="vote-btn" onclick="updateVote('candidate1', 1)">+</button>
+                </div>
+            </div>
+            <div class="candidate">
+                <h3>Kandidat 2</h3>
+                <div class="vote-controls">
+                    <button class="vote-btn" onclick="updateVote('candidate2', -1)">-</button>
+                    <input type="number" id="candidate2" value="0" min="0" readonly>
+                    <button class="vote-btn" onclick="updateVote('candidate2', 1)">+</button>
+                </div>
+            </div>
+            <div class="candidate">
+                <h3>Kandidat 3</h3>
+                <div class="vote-controls">
+                    <button class="vote-btn" onclick="updateVote('candidate3', -1)">-</button>
+                    <input type="number" id="candidate3" value="0" min="0" readonly>
+                    <button class="vote-btn" onclick="updateVote('candidate3', 1)">+</button>
+                </div>
+            </div>
+        </div>
+        <div id="chart-container">
+            <canvas id="voteChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        const ctx = document.getElementById('voteChart').getContext('2d');
+        let voteChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Kandidat 1', 'Kandidat 2', 'Kandidat 3'],
+                datasets: [{
+                    label: 'Jumlah Suara',
+                    data: [0, 0, 0],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.8)',
+                        'rgba(54, 162, 235, 0.8)',
+                        'rgba(255, 206, 86, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)'
+                    ],
+                    borderWidth: 2,
+                    borderRadius: 5,
+                    borderSkipped: false,
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1,
+                            font: {
+                                family: "'Poppins', sans-serif",
+                                size: 12
+                            }
+                        },
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.1)'
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: {
+                                family: "'Poppins', sans-serif",
+                                size: 12
+                            }
+                        },
+                        grid: {
+                            display: false
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                        titleFont: {
+                            family: "'Poppins', sans-serif",
+                            size: 14
+                        },
+                        bodyFont: {
+                            family: "'Poppins', sans-serif",
+                            size: 12
+                        },
+                        padding: 10,
+                        cornerRadius: 5
+                    }
+                },
+                animation: {
+                    duration: 500
+                }
+            }
+        });
+
+        function updateVote(candidateId, change) {
+            const input = document.getElementById(candidateId);
+            let value = parseInt(input.value) + change;
+            if (value < 0) value = 0;
+            input.value = value;
+            
+            input.classList.add('pulse');
+            setTimeout(() => input.classList.remove('pulse'), 500);
+
+            updateChart();
+        }
+
+        function updateChart() {
+            const votes = [
+                parseInt(document.getElementById('candidate1').value) || 0,
+                parseInt(document.getElementById('candidate2').value) || 0,
+                parseInt(document.getElementById('candidate3').value) || 0
+            ];
+            voteChart.data.datasets[0].data = votes;
+            voteChart.update();
+        }
+    </script>
+</body>
+</html>
