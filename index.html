@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Penghitung Suara Ketos Modern</title>
+    <title>Osis Sma Negeri 1 Banyuasin II</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
@@ -72,7 +72,7 @@
             width: 40px;
             height: 40px;
             border: none;
-            background-color: #4CAF50;
+            background-color: #4F75FF;
             color: white;
             border-radius: 50%;
             cursor: pointer;
@@ -117,13 +117,13 @@
 <body>
     <div class="container">
         <div class="header">
-            <img src="/api/placeholder/80/80" alt="Logo" class="logo">
-            <h1>Penghitung Suara Ketos</h1>
-            <img src="/api/placeholder/80/80" alt="Logo" class="logo">
+            <img src="img/Sma.png" alt="Logo" class="logo">
+            <h1>Penghitung Suara Ketos dan Wakil Ketos SMA Negeri 1 Banyuasin II</h1>
+            <img src="img/Osis.png" alt="Logo" class="logo">
         </div>
         <div id="vote-form">
             <div class="candidate">
-                <h3>Kandidat 1</h3>
+                <h3>Paslon 01</h3>
                 <div class="vote-controls">
                     <button class="vote-btn" onclick="updateVote('candidate1', -1)">-</button>
                     <input type="number" id="candidate1" value="0" min="0" readonly>
@@ -131,7 +131,7 @@
                 </div>
             </div>
             <div class="candidate">
-                <h3>Kandidat 2</h3>
+                <h3>Paslon 02</h3>
                 <div class="vote-controls">
                     <button class="vote-btn" onclick="updateVote('candidate2', -1)">-</button>
                     <input type="number" id="candidate2" value="0" min="0" readonly>
@@ -139,7 +139,7 @@
                 </div>
             </div>
             <div class="candidate">
-                <h3>Kandidat 3</h3>
+                <h3>Paslon 03</h3>
                 <div class="vote-controls">
                     <button class="vote-btn" onclick="updateVote('candidate3', -1)">-</button>
                     <input type="number" id="candidate3" value="0" min="0" readonly>
@@ -157,7 +157,7 @@
         let voteChart = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: ['Kandidat 1', 'Kandidat 2', 'Kandidat 3'],
+                labels: ['Paslon 01', 'Paslon 02', 'Paslon 03'],
                 datasets: [{
                     label: 'Jumlah Suara',
                     data: [0, 0, 0],
